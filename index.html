@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        try {
+          if (typeof window !== 'undefined' && 'fetch' in window) {
+            var originalFetch = window.fetch;
+            var activeFetch = function () {
+              return originalFetch.apply(window, arguments);
+            };
+            Object.defineProperty(window, 'fetch', {
+              get: function () {
+                return activeFetch;
+              },
+              set: function (newFetch) {
+                activeFetch = newFetch;
+              },
+              configurable: true,
+              enumerable: true,
+            });
+          }
+        } catch (e) {
+          try {
+            if (typeof Window !== 'undefined' && Window.prototype) {
+              var desc = Object.getOwnPropertyDescriptor(Window.prototype, 'fetch');
+              if (desc && !desc.set && desc.configurable) {
+                var protoFetch = desc.get;
+                var currentFetch = window.fetch;
+                Object.defineProperty(Window.prototype, 'fetch', {
+                  get: function () {
+                    return currentFetch || (protoFetch && protoFetch.call(this));
+                  },
+                  set: function (val) {
+                    currentFetch = val;
+                  },
+                  configurable: true,
+                  enumerable: true,
+                });
+              }
+            }
+          } catch (err) {}
+        }
+      })();
+    </script>
+    <title>Fitora Gym Management</title>
+    <meta name="description" content="Multi-tenant gym membership & subscription management software with vendor admin portal and isolated database partitioning." />
+    <meta property="og:title" content="Fitora Gym Management" />
+    <meta property="og:description" content="Multi-tenant gym membership & subscription management software with vendor admin portal and isolated database partitioning." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#f8fafc] text-slate-900 antialiased selection:bg-lime-300 selection:text-slate-950 font-sans">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "users": {
+      "title": "Users",
+      "description": "System super admins and gym maintainers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "gymId": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "password": { "type": "string" },
+        "role": { "type": "string", "enum": ["SUPER_ADMIN", "GYM_MAINTAINER"] },
+        "status": { "type": "string", "enum": ["Active", "Inactive"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "gyms": {
+      "title": "Gyms",
+      "description": "Registered gyms / tenant configurations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "gymId": { "type": "string" },
+        "name": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "currencySymbol": { "type": "string" },
+        "licenseStatus": { "type": "string" },
+        "licenseExpiryDate": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "gymId", "name", "email"]
+    },
+    "gymPartitions": {
+      "title": "Gym Partitions",
+      "description": "Full partition backup and sync for each gym tenant",
+      "type": "object",
+      "properties": {
+        "gymId": { "type": "string" },
+        "gym": { "type": "object" },
+        "members": { "type": "array" },
+        "plans": { "type": "array" },
+        "payments": { "type": "array" },
+        "renewals": { "type": "array" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["gymId", "gym"]
+    },
+    "adminCredentials": {
+      "title": "Admin Credentials",
+      "description": "Configured administrative credentials",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "password": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["email", "password"]
+    }
+  }
+}
