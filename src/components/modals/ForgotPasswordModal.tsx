@@ -245,7 +245,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
           ) : (
             <form onSubmit={handleLookup} className="space-y-4">
               <p className="text-xs text-slate-600 leading-relaxed">
-                Enter your registered email address (e.g. <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">iamsudheer786@gmail.com</code> or <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">admin@email.com</code>) to recover your password.
+                Enter your registered account email address to recover your password.
               </p>
 
               <div>
@@ -259,8 +259,8 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                     required
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="Enter registered email"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white"
+                    placeholder="Enter your email address"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-3 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white"
                   />
                 </div>
               </div>

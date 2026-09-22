@@ -188,22 +188,47 @@ export const GymMaintainerPortal: React.FC<GymMaintainerPortalProps> = ({
       )}
 
       {/* Mobile Top Bar */}
-      <div className="md:hidden bg-[#0a0d14] text-white p-4 flex items-center justify-between sticky top-0 z-40 border-b border-slate-800">
-        <Logo size="sm" />
+      <div className="md:hidden bg-[#0a0d14] text-white px-3.5 py-3 flex items-center justify-between sticky top-0 z-40 border-b border-slate-800 shadow-sm">
+        <div className="flex items-center gap-2 min-w-0">
+          <Logo size="sm" />
+          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-800/90 border border-slate-700/80 text-[11px] font-medium text-slate-200 truncate max-w-[130px]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="truncate">{partition.gym.name}</span>
+          </div>
+        </div>
         <div className="flex items-center gap-2">
+          {currentView !== 'add-member' && (
+            <button
+              type="button"
+              onClick={() => setCurrentView('add-member')}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#a3e635] text-black font-bold text-xs shadow-xs cursor-pointer active:scale-95 transition-transform"
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Add</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-            className="p-2 text-slate-300 hover:text-white cursor-pointer"
+            className="p-1.5 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-lg cursor-pointer transition-colors"
+            aria-label="Toggle menu"
           >
             {isMobileNavOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
+      {/* Mobile Drawer Backdrop */}
+      {isMobileNavOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden animate-in fade-in duration-150"
+          onClick={() => setIsMobileNavOpen(false)}
+        />
+      )}
+
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed md:sticky top-0 h-screen w-64 bg-[#0a0d14] text-slate-300 flex flex-col justify-between z-30 transition-transform duration-200 ${
+        className={`fixed md:sticky top-0 h-screen w-64 bg-[#0a0d14] text-slate-300 flex flex-col justify-between z-50 md:z-30 transition-transform duration-200 ${
           isMobileNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         } border-r border-slate-800/80`}
         id="sidebar-container"
@@ -322,7 +347,7 @@ export const GymMaintainerPortal: React.FC<GymMaintainerPortalProps> = ({
           </div>
         </header>
 
-        <main className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-3.5 sm:p-6 md:p-8 max-w-7xl w-full mx-auto pb-24 md:pb-8">
           {currentView === 'dashboard' && (
             <DashboardView
               partition={partition}
@@ -387,6 +412,81 @@ export const GymMaintainerPortal: React.FC<GymMaintainerPortalProps> = ({
             />
           )}
         </main>
+
+        {/* Mobile Bottom Navigation Bar */}
+        <nav
+          className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#0a0d14]/95 backdrop-blur-md border-t border-slate-800/90 px-3 py-1.5 flex items-center justify-between text-slate-400 shadow-2xl"
+          id="mobile-bottom-nav"
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentView('dashboard');
+              setIsMobileNavOpen(false);
+            }}
+            className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-colors cursor-pointer ${
+              currentView === 'dashboard' ? 'text-[#a3e635] font-bold' : 'hover:text-white'
+            }`}
+          >
+            <LayoutGrid className="w-5 h-5 mb-0.5" />
+            <span className="text-[10px]">Dashboard</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentView('members');
+              setIsMobileNavOpen(false);
+            }}
+            className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-colors cursor-pointer ${
+              currentView === 'members' ? 'text-[#a3e635] font-bold' : 'hover:text-white'
+            }`}
+          >
+            <Users className="w-5 h-5 mb-0.5" />
+            <span className="text-[10px]">Members</span>
+          </button>
+
+          {/* Center Quick Add Floating Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentView('add-member');
+              setIsMobileNavOpen(false);
+            }}
+            className="flex flex-col items-center justify-center -mt-5 group cursor-pointer"
+            title="Register New Member"
+          >
+            <div className="w-12 h-12 rounded-full bg-[#a3e635] hover:bg-[#92d02a] text-black flex items-center justify-center shadow-lg shadow-lime-500/25 active:scale-95 transition-all">
+              <Plus className="w-6 h-6 stroke-[2.5]" />
+            </div>
+            <span className="text-[10px] font-bold text-slate-300 mt-0.5">Add</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentView('payments');
+              setIsMobileNavOpen(false);
+            }}
+            className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-colors cursor-pointer ${
+              currentView === 'payments' ? 'text-[#a3e635] font-bold' : 'hover:text-white'
+            }`}
+          >
+            <CreditCard className="w-5 h-5 mb-0.5" />
+            <span className="text-[10px]">Payments</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+            className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-colors cursor-pointer ${
+              isMobileNavOpen ? 'text-[#a3e635] font-bold' : 'hover:text-white'
+            }`}
+          >
+            <Menu className="w-5 h-5 mb-0.5" />
+            <span className="text-[10px]">Menu</span>
+          </button>
+        </nav>
       </div>
 
       {/* Modals */}

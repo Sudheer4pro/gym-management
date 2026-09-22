@@ -154,8 +154,8 @@ export const MembersView: React.FC<MembersViewProps> = ({
           id="member-search-input"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by name, phone or member code (e.g. MEM-1001)..."
-          className="w-full bg-white border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all shadow-2xs"
+          placeholder="Search by name, phone or code..."
+          className="w-full bg-white border border-slate-200 rounded-xl pl-11 pr-14 py-3 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all shadow-2xs"
         />
         {searchQuery && (
           <button
@@ -168,8 +168,8 @@ export const MembersView: React.FC<MembersViewProps> = ({
         )}
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-2" id="member-filter-tabs">
+      {/* Filter Tabs (Horizontally scrollable on mobile) */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1.5 -mx-1 px-1 sm:overflow-visible sm:flex-wrap no-scrollbar" id="member-filter-tabs">
         {(['All', 'Active', 'Expiring Soon', 'Expires Today', 'Expired'] as const).map((tab) => {
           const isSelected = selectedFilter === tab;
           const count = tab === 'All' ? members.length : members.filter((m) => m.status === tab).length;
@@ -180,7 +180,7 @@ export const MembersView: React.FC<MembersViewProps> = ({
               type="button"
               id={`filter-tab-${tab.toLowerCase().replace(/\s+/g, '-')}`}
               onClick={() => setSelectedFilter(tab)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
                 isSelected
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'

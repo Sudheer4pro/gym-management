@@ -93,7 +93,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       <div className="w-full max-w-md bg-white border border-slate-200/90 rounded-3xl shadow-xl p-7 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-200">
         {/* Brand Header */}
         <div className="flex flex-col items-center justify-center pt-1">
-          <Logo size="xl" showText textColor="text-slate-900" />
+          <Logo size="xl" showText textColor="text-slate-900" animated />
           <p className="text-xs text-slate-500 mt-2 text-center font-medium">
             {roleMode === 'ADMIN'
               ? 'System Administrator Management Console'
@@ -162,10 +162,10 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={
                   roleMode === 'ADMIN'
-                    ? 'admin@email.com or admin@fitora.com'
-                    : 'e.g. iamsudheer786@gmail.com'
+                    ? 'Enter admin email'
+                    : 'Enter your email address'
                 }
-                className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-3.5 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all"
+                className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-3.5 py-3 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all"
               />
             </div>
           </div>

@@ -1,10 +1,12 @@
 import React from 'react';
+import { motion } from 'motion/react';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showText?: boolean;
   textColor?: string;
   className?: string;
+  animated?: boolean;
 }
 
 export const Logo: React.FC<LogoProps> = ({
@@ -12,6 +14,7 @@ export const Logo: React.FC<LogoProps> = ({
   showText = true,
   textColor = 'text-white',
   className = '',
+  animated = false,
 }) => {
   const sizeMap = {
     sm: 'w-7 h-7',
@@ -27,13 +30,23 @@ export const Logo: React.FC<LogoProps> = ({
     xl: 'text-3xl',
   };
 
+  const IconContainer = animated ? motion.div : 'div';
+
   return (
     <div
-      className={`inline-flex items-center gap-2.5 font-bold tracking-tight select-none ${className}`}
+      className={`inline-flex items-center gap-2.5 font-bold tracking-tight select-none group ${className}`}
       id="fitora-brand-logo"
     >
-      <div
-        className={`${sizeMap[size]} bg-[#0f1218] rounded-xl flex items-center justify-center p-1.5 shadow-md shadow-black/20 flex-shrink-0 relative overflow-hidden`}
+      <IconContainer
+        {...(animated
+          ? {
+              initial: { scale: 0.9, opacity: 0 },
+              animate: { scale: 1, opacity: 1 },
+              whileHover: { scale: 1.05 },
+              transition: { type: 'spring', stiffness: 350, damping: 20 },
+            }
+          : {})}
+        className={`${sizeMap[size]} bg-[#0f1218] rounded-xl flex items-center justify-center p-1.5 shadow-md shadow-black/20 flex-shrink-0 relative overflow-hidden transition-all duration-200 group-hover:shadow-lime-500/10 group-hover:border-lime-500/30`}
         aria-label="Fitora Logo Icon"
       >
         <svg
@@ -42,14 +55,18 @@ export const Logo: React.FC<LogoProps> = ({
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path d="M38 22H82L70 38H26L38 22Z" fill="#a3e635" />
+          <path
+            d="M38 22H82L70 38H26L38 22Z"
+            fill="#a3e635"
+            className="transition-transform duration-200 group-hover:translate-x-0.5"
+          />
           <path d="M20 44H74L60 60H34L26 78H12L20 44Z" fill="#ffffff" />
           <path d="M36 64H58L48 78H26L36 64Z" fill="#ffffff" />
         </svg>
-      </div>
+      </IconContainer>
       {showText && (
         <span
-          className={`${textMap[size]} ${textColor} font-extrabold tracking-wide font-sans`}
+          className={`${textMap[size]} ${textColor} font-extrabold tracking-wide font-sans transition-colors duration-200`}
         >
           Fitora
         </span>

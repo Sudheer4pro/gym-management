@@ -475,11 +475,11 @@ export const AddMemberView: React.FC<AddMemberViewProps> = ({
           </div>
 
           {/* Form Actions */}
-          <div className="pt-4 flex items-center justify-end gap-3">
+          <div className="pt-4 flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 sm:gap-3">
             <button
               type="button"
               onClick={onCancel}
-              className="px-5 py-2.5 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+              className="w-full sm:w-auto px-5 py-3 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer text-center"
             >
               Cancel
             </button>
@@ -487,7 +487,7 @@ export const AddMemberView: React.FC<AddMemberViewProps> = ({
               type="submit"
               id="btn-submit-add-member"
               disabled={isSubmitting}
-              className="px-6 py-2.5 text-sm font-semibold text-white bg-[#0f172a] hover:bg-black rounded-xl shadow-xs transition-colors disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3 text-sm font-bold text-white bg-[#0f172a] hover:bg-black rounded-xl shadow-xs transition-colors disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
             >
               <Check className="w-4 h-4" />
               <span>{isSubmitting ? 'Registering...' : 'Add Member'}</span>

@@ -68,7 +68,7 @@ const DEFAULT_GYMS: Gym[] = [
     email: 'marcus@apexfit.com',
     phone: '9123456780',
     address: '88 Olympic Blvd, Suite 4',
-    currencySymbol: '$',
+    currencySymbol: '₹',
     licenseStatus: 'Active',
     licenseExpiryDate: '2027-04-30',
     createdAt: '2026-02-15',
@@ -313,7 +313,7 @@ function createDefaultApexPartition(): GymPartition {
         planName: 'Elite Quarterly',
         startDate: '2026-07-01',
         expiryDate: '2026-10-01',
-        amountPaid: 250,
+        amountPaid: 4500,
         paymentMethod: 'Card',
         status: 'Active',
         createdAt: '2026-07-01',
@@ -326,7 +326,7 @@ function createDefaultApexPartition(): GymPartition {
         gymId: 'gym_apex_02',
         name: 'Sprint Monthly',
         durationMonths: 1,
-        price: 90,
+        price: 1500,
         description: 'Monthly open floor access.',
         isActive: true,
       },
@@ -335,7 +335,7 @@ function createDefaultApexPartition(): GymPartition {
         gymId: 'gym_apex_02',
         name: 'Elite Quarterly',
         durationMonths: 3,
-        price: 250,
+        price: 4500,
         description: 'Unlimited functional conditioning + recovery lounge.',
         isActive: true,
       },
@@ -347,7 +347,7 @@ function createDefaultApexPartition(): GymPartition {
         memberId: 'mem_apex_1',
         memberName: 'Elena Rostova',
         planName: 'Elite Quarterly',
-        amount: 250,
+        amount: 4500,
         paymentMethod: 'Card',
         date: '2026-07-01',
         receiptNumber: 'APX-RCP-101',
@@ -375,6 +375,38 @@ export const MockStorage = {
     if (!localStorage.getItem(apexKey)) {
       localStorage.setItem(apexKey, JSON.stringify(createDefaultApexPartition()));
     }
+
+    // Auto-migrate any previously stored gyms or partitions to INR (₹)
+    try {
+      const rawGyms = localStorage.getItem(STORAGE_KEYS.MASTER_GYMS);
+      if (rawGyms) {
+        const parsedGyms: Gym[] = JSON.parse(rawGyms);
+        let gymsChanged = false;
+        parsedGyms.forEach((g) => {
+          if (!g.currencySymbol || g.currencySymbol === '$') {
+            g.currencySymbol = '₹';
+            gymsChanged = true;
+          }
+        });
+        if (gymsChanged) {
+          localStorage.setItem(STORAGE_KEYS.MASTER_GYMS, JSON.stringify(parsedGyms));
+        }
+      }
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(STORAGE_KEYS.PARTITION_PREFIX)) {
+          const rawPart = localStorage.getItem(key);
+          if (rawPart) {
+            const part: GymPartition = JSON.parse(rawPart);
+            if (part.gym && (!part.gym.currencySymbol || part.gym.currencySymbol === '$')) {
+              part.gym.currencySymbol = '₹';
+              localStorage.setItem(key, JSON.stringify(part));
+            }
+          }
+        }
+      }
+    } catch {}
   },
 
   getAllGyms(): Gym[] {
@@ -571,6 +603,9 @@ export const MockStorage = {
     if (raw) {
       try {
         const parsed: GymPartition = JSON.parse(raw);
+        if (parsed.gym && (!parsed.gym.currencySymbol || parsed.gym.currencySymbol === '$')) {
+          parsed.gym.currencySymbol = '₹';
+        }
         parsed.members = (parsed.members || []).map((m) => ({
           ...m,
           status: calculateMemberStatus(m.expiryDate),
@@ -580,8 +615,9 @@ export const MockStorage = {
         console.error('Error parsing gym partition:', err);
       }
     }
+    const defaultGym = this.getGymById(gymId) || DEFAULT_GYMS[0];
     return {
-      gym: this.getGymById(gymId) || DEFAULT_GYMS[0],
+      gym: { ...defaultGym, currencySymbol: defaultGym.currencySymbol || '₹' },
       members: [],
       plans: [],
       payments: [],
@@ -592,6 +628,21 @@ export const MockStorage = {
   savePartition(gymId: string, partition: GymPartition): void {
     const key = `${STORAGE_KEYS.PARTITION_PREFIX}${gymId}`;
     localStorage.setItem(key, JSON.stringify(partition));
+
+    // Keep MASTER_GYMS in sync if partition.gym exists
+    if (partition.gym) {
+      try {
+        const gyms = this.getAllGyms();
+        const idx = gyms.findIndex((g) => g.id === gymId || g.id === partition.gym.id);
+        if (idx !== -1) {
+          gyms[idx] = { ...gyms[idx], ...partition.gym };
+        } else {
+          gyms.push(partition.gym);
+        }
+        localStorage.setItem(STORAGE_KEYS.MASTER_GYMS, JSON.stringify(gyms));
+      } catch {}
+    }
+
     CloudStorageService.syncPartitionToCloud(gymId, partition).catch(() => {});
   },
 
